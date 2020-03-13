@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+    db:
+        image: postgres:12.2-alpine
+        restart: always
+        ports:
+            - 5432:5432
+        volumes:
+            - db_data:/var/lib/postgresql/data
+        networks:
+            - pgnet
+        env_file:
+            - .enviroments/postgresql.env
+
+    pgadmin:
+        image: dpage/pgadmin4
+        restart: always
+        networks:
+            - pgnet
+        ports:
+            - 8800:80
+        volumes:
+            - pg_data:/var/lib/pgadmin
+        env_file:
+            - .enviroments/pgadmin.env
+        links:
+            - db:db
+        depends_on:
+            - db
+
+networks:
+    pgnet:
+
+volumes:
+    pg_data:
+    db_data:
